@@ -1,0 +1,28 @@
+name: Build 5parks VST3
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clone JUCE
+        run: git clone https://github.com/juce-framework/JUCE.git
+
+      - name: Configure CMake
+        run: cmake -B build -S . -DJUCE_DIR=JUCE
+
+      - name: Build plugin
+        run: cmake --build build --config Release --target FiveParksVST3_VST3
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FiveParksVST3
+          path: build/FiveParksVST3_artefacts/Release/VST3
